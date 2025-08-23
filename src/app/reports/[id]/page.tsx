@@ -18,12 +18,6 @@ export default function ReportDetailPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (params?.id) {
-      fetchReportContent(params.id as string);
-    }
-  }, [params?.id]);
-
   const fetchReportContent = async (id: string) => {
     try {
       setLoading(true);
@@ -37,13 +31,19 @@ export default function ReportDetailPage() {
       } else {
         setError(data.error || '获取日报内容失败');
       }
-    } catch (error) {
-      console.error('获取日报内容失败:', error);
+    } catch (err) {
+      console.error('获取日报内容失败:', err);
       setError('网络请求失败，请稍后重试');
     } finally {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (params?.id) {
+      fetchReportContent(params.id as string);
+    }
+  }, [params?.id]);
 
   const formatDate = (dateStr: string) => {
     try {
@@ -52,7 +52,7 @@ export default function ReportDetailPage() {
       const month = date.getMonth() + 1;
       const day = date.getDate();
       return `${year}年${month}月${day}日`;
-    } catch (error) {
+    } catch {
       return dateStr || '未知日期';
     }
   };
@@ -83,7 +83,7 @@ export default function ReportDetailPage() {
   if (loading) {
     return (
       <>
-        <script src="https://cdn.tailwindcss.com"></script>
+      <script src="https://cdn.tailwindcss.com" async></script>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
         <div className="min-h-screen bg-gray-50">
           {/* 页眉 */}
@@ -121,7 +121,7 @@ export default function ReportDetailPage() {
   if (error) {
     return (
       <>
-        <script src="https://cdn.tailwindcss.com"></script>
+        <script src="https://cdn.tailwindcss.com" async></script>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
         <div className="min-h-screen bg-gray-50">
           {/* 页眉 */}
@@ -176,7 +176,7 @@ export default function ReportDetailPage() {
   if (!report) {
     return (
       <>
-        <script src="https://cdn.tailwindcss.com"></script>
+        <script src="https://cdn.tailwindcss.com" async></script>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
         <div className="min-h-screen bg-gray-50">
           {/* 页眉 */}
@@ -220,7 +220,7 @@ export default function ReportDetailPage() {
 
   return (
     <>
-      <script src="https://cdn.tailwindcss.com"></script>
+      <script src="https://cdn.tailwindcss.com" async></script>
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
       <div className="min-h-screen bg-gray-50">
         {/* 页眉 */}

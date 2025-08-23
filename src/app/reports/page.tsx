@@ -1,6 +1,18 @@
-﻿﻿"use client";
+﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿"use client";
 import Link from "next/link";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
+
+// 定义API返回的报告数据接口
+interface ApiReport {
+  id: string | number;
+  date: string;
+  title: string;
+  summary: string | string[];
+  group_name: string;
+  view_url?: string;
+  image_api_url?: string;
+  created_at?: string;
+}
 
 export default function ReportsPage() {
   const [selectedGroup, setSelectedGroup] = useState("全部社群");
@@ -56,12 +68,8 @@ export default function ReportsPage() {
     }
   };
 
-  // 从API获取日报列表
-  useEffect(() => {
-    fetchReports();
-  }, []);
-
-  const fetchReports = async () => {
+  // 使用useCallback包装fetchReports函数
+  const fetchReports = useCallback(async () => {
     try {
       setLoading(true);
       const response = await fetch('/api/reports/list');
@@ -70,11 +78,11 @@ export default function ReportsPage() {
         console.log('API返回数据:', data); // 调试日志
         if (data.success) {
           // 转换API数据格式为前端期望的格式
-          const formattedReports = (data.data || []).map(report => ({
+          const formattedReports = (data.data || []).map((report: ApiReport) => ({
             id: report.id,
             date: report.date,
             title: report.title,
-            summary: typeof report.summary === 'string' ? report.summary.split('\n').filter(s => s.trim()).slice(0, 3) : report.summary.slice(0, 3),
+            summary: typeof report.summary === 'string' ? report.summary.split('\n').filter((s: string) => s.trim()).slice(0, 3) : report.summary.slice(0, 3),
             group: report.group_name,
             gradient: getGradientForGroup(report.group_name),
             rawDate: report.date
@@ -106,7 +114,12 @@ export default function ReportsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+  
+  // 页面加载时获取报告列表
+  useEffect(() => {
+    fetchReports();
+  }, [fetchReports]);
 
   return (
     <div className="min-h-screen bg-black text-white">
@@ -274,7 +287,7 @@ export default function ReportsPage() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {reports.map((report, idx) => (
+            {reports.map((report) => (
               <Link key={report.id} href={`/reports/${report.id}`}>
                 <div className="cursor-pointer group rounded-xl overflow-hidden shadow-lg bg-[#181926]/80 border border-[#23243a] transition-all hover:scale-[1.02]">
                   {/* 卡片头部 - 渐变色 */}

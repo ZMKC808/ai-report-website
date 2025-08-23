@@ -47,7 +47,7 @@ export default async function handler(req, res) {
     const storageDir = '/tmp/reports';
     try {
       await fs.mkdir(storageDir, { recursive: true });
-    } catch (error) {
+    } catch {
       // 目录可能已存在，忽略错误
     }
 

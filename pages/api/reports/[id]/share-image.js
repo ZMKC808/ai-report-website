@@ -46,7 +46,7 @@ export default async function handler(req, res) {
       htmlContent = await fs.readFile(htmlFilePath, 'utf8');
       const metaContent = await fs.readFile(metaFilePath, 'utf8');
       reportMeta = JSON.parse(metaContent);
-    } catch (error) {
+    } catch (err) {
       return res.status(404).json({
         success: false,
         error: `Report with ID ${id} not found`
@@ -84,13 +84,13 @@ export default async function handler(req, res) {
       }
     });
 
-  } catch (error) {
-    console.error('生成图片时发生错误:', error);
+  } catch (err) {
+    console.error('生成图片时发生错误:', err);
     
     res.status(500).json({
       success: false,
       error: '服务器内部错误',
-      details: process.env.NODE_ENV === 'development' ? error.message : undefined
+      details: process.env.NODE_ENV === 'development' ? err.message : undefined
     });
   } finally {
     // 确保浏览器被关闭
