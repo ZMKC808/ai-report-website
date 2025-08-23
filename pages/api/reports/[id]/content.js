@@ -1,7 +1,12 @@
 // 获取日报详情内容API
 // 返回指定ID的日报HTML内容
 
-import { reports } from '../upload.js';
+// 使用全局变量获取数据
+let reports;
+if (!global.reports) {
+  global.reports = new Map();
+}
+reports = global.reports;
 
 export default async function handler(req, res) {
   const { id } = req.query;

@@ -11,8 +11,11 @@ export const config = {
   },
 };
 
-// 模拟数据库存储（简单的内存存储）
-const reports = new Map();
+// 使用全局变量存储数据，确保API之间可以共享
+if (!global.reports) {
+  global.reports = new Map();
+}
+const reports = global.reports;
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -24,7 +27,7 @@ export default async function handler(req, res) {
 
   try {
     const form = formidable({
-      uploadDir: '/tmp',
+      uploadDir: process.platform === 'win32' ? process.env.TEMP || 'C:\\temp' : '/tmp',
       keepExtensions: true,
       maxFileSize: 10 * 1024 * 1024, // 10MB
     });

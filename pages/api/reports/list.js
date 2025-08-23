@@ -1,8 +1,6 @@
 // 获取日报列表API
 // 返回所有已上传的日报
 
-import { reports } from './upload.js';
-
 export default async function handler(req, res) {
   if (req.method !== 'GET') {
     return res.status(405).json({ 
@@ -12,8 +10,13 @@ export default async function handler(req, res) {
   }
 
   try {
-    // 从内存存储中获取所有日报
-    const reportList = Array.from(reports.values())
+    // 确保全局存储存在
+    if (!global.reports) {
+      global.reports = new Map();
+    }
+    
+    // 从全局存储中获取所有日报
+    const reportList = Array.from(global.reports.values())
       .sort((a, b) => new Date(b.created_at) - new Date(a.created_at)) // 按创建时间倒序
       .map(report => ({
         id: report.id,

@@ -1,16 +1,4 @@
-// 测试业务脑袋群日报上传
-// 完全按照ai_report_config.json中的格式
 
-const fs = require('fs');
-const FormData = require('form-data');
-const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
-
-async function testBusinessBrainUpload() {
-  try {
-    console.log('🧠 测试业务脑袋群日报上传...\n');
-
-    // 创建测试HTML内容（模拟你的日报格式）
-    const testHtml = `
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -112,66 +100,4 @@ async function testBusinessBrainUpload() {
         </div>
     </div>
 </body>
-</html>`;
-
-    // 保存HTML文件
-    const htmlPath = './业务脑袋_20250820.html';
-    fs.writeFileSync(htmlPath, testHtml, 'utf8');
-    console.log('✅ HTML文件已创建:', htmlPath);
-
-    // 准备上传数据（完全按照你的配置格式）
-    const formData = new FormData();
-    formData.append('title', '业务脑袋8月20日');
-    formData.append('date', '2025-08-20');
-    formData.append('group_name', '业务脑袋');
-    formData.append('summary', '- 深入观察度交流\n- 李想创业智慧解读\n- 房产投资观察');
-    formData.append('html_file', fs.createReadStream(htmlPath));
-
-    // 上传到本地API（Next.js服务器正在运行）
-    const apiUrl = 'http://localhost:3000/api/reports/upload';
-    console.log('🚀 正在上传到:', apiUrl);
-    
-    const response = await fetch(apiUrl, {
-      method: 'POST',
-      body: formData,
-      headers: formData.getHeaders()
-    });
-
-    const result = await response.json();
-    
-    if (response.ok && result.success) {
-      console.log('\n✅ 上传成功!');
-      console.log('📋 报告详情:');
-      console.log('   ID:', result.data.id);
-      console.log('   标题:', result.data.title);
-      console.log('   日期:', result.data.date);
-      console.log('   群组:', result.data.group_name);
-      console.log('🔗 查看链接:', `https://ai-report-website.vercel.app${result.data.view_url}`);
-      console.log('🖼️ 图片API:', `https://ai-report-website.vercel.app${result.data.image_api_url}`);
-      
-      // 测试获取日报列表
-      console.log('\n📋 测试获取日报列表...');
-      const listResponse = await fetch('http://localhost:3000/api/reports/list');
-      const listResult = await listResponse.json();
-      
-      if (listResult.success) {
-        console.log(`✅ 日报列表获取成功，共 ${listResult.total} 条记录`);
-        listResult.data.forEach((report, index) => {
-          console.log(`   ${index + 1}. ${report.title} (${report.date})`);
-        });
-      }
-      
-    } else {
-      console.log('\n❌ 上传失败:');
-      console.log('状态码:', response.status);
-      console.log('错误信息:', result);
-    }
-
-  } catch (error) {
-    console.error('\n❌ 测试过程中发生错误:', error.message);
-  }
-}
-
-// 运行测试
-console.log('🧪 开始测试业务脑袋群日报系统...\n');
-testBusinessBrainUpload();
+</html>
