@@ -1,13 +1,20 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import Link from 'next/link';
 
 export default function ReportDetailPage() {
   const params = useParams();
-  const router = useRouter();
-  const [report, setReport] = useState(null);
+  const [report, setReport] = useState<{
+    id: string;
+    title: string;
+    date: string;
+    group_name: string;
+    summary: string;
+    html_content: string;
+    author?: string;
+  } | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -38,7 +45,7 @@ export default function ReportDetailPage() {
     }
   };
 
-  const formatDate = (dateStr) => {
+  const formatDate = (dateStr: string) => {
     try {
       const date = new Date(dateStr);
       const year = date.getFullYear();
@@ -99,7 +106,7 @@ export default function ReportDetailPage() {
               <p className="text-gray-300 mb-6">{error}</p>
               <div className="space-x-4">
                 <button
-                  onClick={() => fetchReportContent(params.id)}
+                  onClick={() => params?.id && fetchReportContent(params.id as string)}
                   className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg transition-colors"
                 >
                   重试

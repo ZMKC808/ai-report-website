@@ -36,7 +36,15 @@ export default function ReportsPage() {
     group.description.toLowerCase().includes(groupSearchQuery.toLowerCase())
   );
 
-  const [reports, setReports] = useState([]);
+  const [reports, setReports] = useState<Array<{
+    id: number;
+    date: string;
+    title: string;
+    summary: string | string[];
+    group: string;
+    gradient: string;
+    rawDate?: string;
+  }>>([]);
   const [loading, setLoading] = useState(true);
 
   // 从API获取日报列表
@@ -288,7 +296,7 @@ export default function ReportsPage() {
                 <div className="bg-[#181926]/80 px-8 py-6">
                   <h3 className="text-white font-bold text-xl mb-4">{report.title}</h3>
                   <div className="space-y-2 mb-6">
-                    {Array.isArray(report.summary) ? report.summary.map((item, index) => (
+                    {Array.isArray(report.summary) ? report.summary.map((item: string, index: number) => (
                       <div key={index} className="text-gray-200 text-base">
                         - {item}
                       </div>
