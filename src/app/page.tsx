@@ -32,7 +32,7 @@ export default function Home() {
             <br />
             生成与管理平台
           </h1>
-          <p className="text-xl text-gray-400 mb-12">
+          <p className="text-xl text-gray-400 mb-12 opacity-60">
             每日精选社群动态、技术分享、干货合集，助您及时掌握 AI 领域最新进展。
           </p>
           
@@ -43,7 +43,7 @@ export default function Home() {
                 查看示例日报
               </button>
             </Link>
-            <button className="border border-gray-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-gray-800 transition-colors">
+            <button className="bg-black bg-opacity-50 border border-gray-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-gray-800 transition-colors">
               了解更多
             </button>
           </div>
@@ -53,7 +53,7 @@ export default function Home() {
         <div className="grid grid-cols-3 gap-8 w-full max-w-6xl">
           {/* 社群日报 */}
           <Link href="/reports">
-            <div className="bg-gray-900 border border-gray-800 rounded-xl p-8 hover:bg-gray-800 transition-colors cursor-pointer">
+            <div className="bg-black bg-opacity-60 border border-gray-700 rounded-xl p-8 hover:bg-black hover:bg-opacity-80 transition-colors cursor-pointer">
               <div className="w-12 h-12 bg-gray-800 rounded-lg flex items-center justify-center mb-6">
                 <div className="w-6 h-6 bg-gradient-to-r from-blue-500 to-green-500 rounded"></div>
               </div>
@@ -66,7 +66,7 @@ export default function Home() {
 
           {/* 应用工具 */}
           <Link href="/tools">
-            <div className="bg-gray-900 border border-gray-800 rounded-xl p-8 hover:bg-gray-800 transition-colors cursor-pointer">
+            <div className="bg-black bg-opacity-60 border border-gray-700 rounded-xl p-8 hover:bg-black hover:bg-opacity-80 transition-colors cursor-pointer">
               <div className="w-12 h-12 bg-gray-800 rounded-lg flex items-center justify-center mb-6">
                 <div className="w-6 h-6 bg-gradient-to-r from-purple-500 to-pink-500 rounded"></div>
               </div>
@@ -79,7 +79,7 @@ export default function Home() {
 
           {/* AI提示词 */}
           <Link href="/prompts">
-            <div className="bg-gray-900 border border-gray-800 rounded-xl p-8 hover:bg-gray-800 transition-colors cursor-pointer">
+            <div className="bg-black bg-opacity-60 border border-gray-700 rounded-xl p-8 hover:bg-black hover:bg-opacity-80 transition-colors cursor-pointer">
               <div className="w-12 h-12 bg-gray-800 rounded-lg flex items-center justify-center mb-6">
                 <div className="w-6 h-6 bg-gradient-to-r from-yellow-500 to-orange-500 rounded"></div>
               </div>

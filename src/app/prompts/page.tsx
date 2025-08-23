@@ -9,69 +9,69 @@ export default function PromptsPage() {
   const prompts = [
     {
       id: 1,
-      title: "社群日报生成提示词",
-      description: "专门用于生成高质量社群日报的AI提示词模板",
-      category: "报告生成",
-      tags: ["日报", "社群", "总结"],
-      usage: 1250,
+      title: "编程助手",
+      description: "作为编程改进助手，你的任务是改进代码的拼写、语法、清晰度、简洁性...",
+      category: "编程",
+      tags: ["编程", "代码", "优化"],
+      usage: "85K",
       rating: 4.9,
-      bgColor: "from-blue-500 to-blue-600",
-      preview: "请根据以下微信群聊记录，生成一份专业的社群日报..."
+      bgColor: "bg-gradient-to-br from-orange-500 to-red-500",
+      preview: "As a writing improvement assistant, your task is to improve the spelling, grammar, clarity, concision..."
     },
     {
       id: 2,
-      title: "商业分析提示词",
-      description: "深度分析商业模式、市场趋势的专业提示词",
-      category: "商业分析",
-      tags: ["商业", "分析", "策略"],
-      usage: 890,
+      title: "提示词 2",
+      description: "高质量提示词示例，帮助您更好地使用AI工具。",
+      category: "通用",
+      tags: ["提示词", "AI", "工具"],
+      usage: "83K",
       rating: 4.8,
-      bgColor: "from-green-500 to-green-600",
-      preview: "作为一名资深商业分析师，请对以下业务数据进行深入分析..."
+      bgColor: "bg-gradient-to-br from-blue-500 to-purple-500",
+      preview: "Professional prompt template for various use cases..."
     },
     {
       id: 3,
-      title: "技术文档写作助手",
-      description: "帮助生成清晰、专业的技术文档和API说明",
-      category: "技术写作",
-      tags: ["文档", "技术", "API"],
-      usage: 670,
+      title: "提示词 3",
+      description: "高质量提示词示例，帮助您更好地使用AI工具。",
+      category: "分析",
+      tags: ["分析", "数据", "洞察"],
+      usage: "9K",
       rating: 4.7,
-      bgColor: "from-purple-500 to-purple-600",
-      preview: "请帮我编写一份详细的API接口文档，包含以下功能..."
+      bgColor: "bg-gradient-to-br from-green-500 to-teal-500",
+      preview: "Professional prompt template for various use cases..."
     },
     {
       id: 4,
-      title: "创意内容策划",
-      description: "激发创意思维，生成优质内容策划方案",
-      category: "内容创作",
-      tags: ["创意", "策划", "营销"],
-      usage: 1100,
+      title: "提示词 4",
+      description: "高质量提示词示例，帮助您更好地使用AI工具。",
+      category: "创作",
+      tags: ["创作", "内容", "文案"],
+      usage: "56K",
       rating: 4.9,
-      bgColor: "from-orange-500 to-orange-600",
-      preview: "我需要为品牌策划一场创新的营销活动，目标受众是..."
+      bgColor: "bg-gradient-to-br from-pink-500 to-purple-500",
+      preview: "Professional prompt template for various use cases..."
     },
     {
       id: 5,
-      title: "代码审查助手",
-      description: "专业的代码质量检查和优化建议提示词",
-      category: "代码审查",
-      tags: ["代码", "审查", "优化"],
-      usage: 780,
+      title: "提示词 5",
+      description: "高质量提示词示例，帮助您更好地使用AI工具。",
+      category: "技术",
+      tags: ["技术", "开发", "架构"],
+      usage: "82K",
       rating: 4.6,
-      bgColor: "from-red-500 to-red-600",
-      preview: "请仔细审查以下代码，从性能、安全性、可维护性角度..."
+      bgColor: "bg-gradient-to-br from-indigo-500 to-blue-500",
+      preview: "Professional prompt template for various use cases..."
     },
     {
       id: 6,
-      title: "数据可视化设计",
-      description: "指导数据可视化图表设计和优化的提示词",
-      category: "数据可视化",
-      tags: ["数据", "可视化", "图表"],
-      usage: 520,
+      title: "提示词 6",
+      description: "高质量提示词示例，帮助您更好地使用AI工具。",
+      category: "商业",
+      tags: ["商业", "策略", "分析"],
+      usage: "11K",
       rating: 4.5,
-      bgColor: "from-teal-500 to-teal-600",
-      preview: "基于以下数据集，请设计最适合的可视化方案..."
+      bgColor: "bg-gradient-to-br from-yellow-500 to-orange-500",
+      preview: "Professional prompt template for various use cases..."
     }
   ];
 
@@ -148,65 +148,42 @@ export default function PromptsPage() {
       </div>
 
       {/* 提示词卡片网格 */}
-      <div className="max-w-6xl mx-auto px-6 pb-16">
-        <div className="grid grid-cols-2 gap-8">
+      <div className="max-w-7xl mx-auto px-6 pb-16">
+        <div className="grid grid-cols-3 gap-6">
           {filteredPrompts.map((prompt) => (
             <Link key={prompt.id} href={`/prompt/${prompt.id}`}>
-              <div className="cursor-pointer group">
-                {/* 卡片头部 - 彩色渐变区域 */}
-                <div className={`bg-gradient-to-r ${prompt.bgColor} p-6 rounded-t-2xl`}>
+              <div className="cursor-pointer group bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden hover:bg-gray-800 transition-colors">
+                {/* 卡片头部信息 */}
+                <div className="p-6 pb-4">
                   <div className="flex justify-between items-start mb-4">
-                    <span className="text-white text-sm bg-white bg-opacity-20 px-2 py-1 rounded">
-                      {prompt.category}
-                    </span>
-                    <div className="flex items-center gap-4 text-white text-sm">
-                      <div className="flex items-center gap-1">
-                        <span></span>
-                        <span>{prompt.rating}</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <span></span>
-                        <span>{prompt.usage}</span>
-                      </div>
+                    <h3 className="text-xl font-bold text-white">
+                      {prompt.title}
+                    </h3>
+                    <div className="flex items-center gap-2">
+                      <span className="bg-orange-500 text-white text-sm px-2 py-1 rounded font-medium">
+                        {prompt.usage}
+                      </span>
+                      <button className="text-pink-400 hover:text-pink-300">
+                        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
+                        </svg>
+                      </button>
+                      <button className="text-gray-400 hover:text-gray-300">
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
+                        </svg>
+                      </button>
                     </div>
                   </div>
                   
-                  <div className="text-white">
-                    <h3 className="text-xl font-bold mb-2">
-                      {prompt.title}
-                    </h3>
-                    <p className="text-sm opacity-90">
-                      {prompt.description}
-                    </p>
-                  </div>
-                </div>
-
-                {/* 卡片底部 - 黑色内容区域 */}
-                <div className="bg-gray-900 border border-gray-800 border-t-0 rounded-b-2xl p-6 group-hover:bg-gray-800 transition-colors">
-                  {/* 预览内容 */}
-                  <div className="bg-gray-800 rounded-lg p-4 mb-4">
-                    <p className="text-gray-300 text-sm italic">
-                      &quot;{prompt.preview}...&quot;
-                    </p>
-                  </div>
+                  <p className="text-gray-300 text-sm mb-4 leading-relaxed">
+                    {prompt.description}
+                  </p>
                   
-                  {/* 标签 */}
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {prompt.tags.map((tag, index) => (
-                      <span key={index} className="bg-gray-800 text-gray-300 text-xs px-2 py-1 rounded">
-                        #{tag}
-                      </span>
-                    ))}
-                  </div>
-                  
-                  {/* 操作按钮 */}
-                  <div className="flex gap-2">
-                    <button className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg text-sm transition-colors">
-                      使用提示词
-                    </button>
-                    <button className="px-3 bg-gray-800 hover:bg-gray-700 text-gray-300 py-2 rounded-lg text-sm transition-colors">
-                      收藏
-                    </button>
+                  <div className="bg-gray-800 rounded-lg p-3 mb-4">
+                    <p className="text-gray-400 text-sm italic">
+                      {prompt.preview}
+                    </p>
                   </div>
                 </div>
               </div>
