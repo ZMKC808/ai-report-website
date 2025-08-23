@@ -1,4 +1,4 @@
-﻿"use client";
+﻿﻿"use client";
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 
@@ -36,32 +36,49 @@ export default function ReportsPage() {
     group.description.toLowerCase().includes(groupSearchQuery.toLowerCase())
   );
 
-  const mockReports = [
-    {
-      id: 1,
-      date: "2025年8月22日",
-      title: "今日讨论重点",
-      summary: ["深入观察度交流", "李想创业智慧解读", "房产投资观察"],
-      group: "业务脑袋群",
-      gradient: "bg-gradient-to-br from-blue-500 via-purple-500 to-purple-600"
-    },
-    {
-      id: 2,
-      date: "2025年8月21日",
-      title: "今日讨论重点",
-      summary: ["AI Agent开发实战", "Kimi API集成技巧", "自动化部署方案"],
-      group: "AI编程互助会",
-      gradient: "bg-gradient-to-br from-green-400 via-blue-500 to-blue-600"
-    },
-    {
-      id: 3,
-      date: "2025年8月20日",
-      title: "今日讨论重点",
-      summary: ["产品策略深度分析", "技术架构优化", "市场洞察分享"],
-      group: "创业交流群",
-      gradient: "bg-gradient-to-br from-pink-500 via-purple-500 to-purple-600"
+  const [reports, setReports] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // 从API获取日报列表
+  useEffect(() => {
+    fetchReports();
+  }, []);
+
+  const fetchReports = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch('/api/reports/list');
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success) {
+          setReports(data.reports || []);
+        }
+      }
+    } catch (error) {
+      console.error('获取日报列表失败:', error);
+      // 如果API失败，使用模拟数据
+      setReports([
+        {
+          id: 1,
+          date: "2025年8月22日",
+          title: "今日讨论重点",
+          summary: ["深入观察度交流", "李想创业智慧解读", "房产投资观察"],
+          group: "业务脑袋群",
+          gradient: "bg-gradient-to-br from-blue-500 via-purple-500 to-purple-600"
+        },
+        {
+          id: 2,
+          date: "2025年8月21日", 
+          title: "今日讨论重点",
+          summary: ["AI Agent开发实战", "Kimi API集成技巧", "自动化部署方案"],
+          group: "AI编程互助会",
+          gradient: "bg-gradient-to-br from-green-400 via-blue-500 to-blue-600"
+        }
+      ]);
+    } finally {
+      setLoading(false);
     }
-  ];
+  };
 
   return (
     <div className="min-h-screen bg-black text-white">
@@ -215,21 +232,55 @@ export default function ReportsPage() {
 
       {/* 日报卡片 - 高级渐变风格 */}
       <div className="max-w-6xl mx-auto px-6 pb-16">
-        <div className="grid grid-cols-3 gap-8">
-          {mockReports.map((report, idx) => (
-            <Link key={report.id} href={`/report/${report.id}`}>
+        {loading ? (
+          <div className="flex items-center justify-center py-20">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+              <p className="text-gray-400">正在加载日报...</p>
+            </div>
+          </div>
+        ) : reports.length === 0 ? (
+          <div className="text-center py-20">
+            <p className="text-gray-400 text-lg">暂无日报数据</p>
+            <p className="text-gray-500 text-sm mt-2">请先上传一些日报内容</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-3 gap-8">
+            {reports.map((report, idx) => (
+              <Link key={report.id} href={`/reports/${report.id}`}>
               <div className="cursor-pointer group rounded-2xl overflow-hidden shadow-xl bg-[#181926]/80 border border-[#23243a] transition-all hover:scale-[1.025]">
                 {/* 卡片头部 - 高级渐变色 */}
-                <div className={`${report.gradient} p-6 pb-3`}> 
+                <div className={`${report.gradient || 'bg-gradient-to-br from-blue-500 via-purple-500 to-purple-600'} p-6 pb-3`}> 
                   <div className="flex flex-col items-center justify-center">
                     <span className="text-white text-sm opacity-90 mb-1">{report.date}</span>
-                    <div className="text-4xl font-extrabold tracking-wider mb-1 drop-shadow-lg">AUG {report.date.split("月")[0].split("年")[1].padStart(2, "0")}</div>
-                    <div className="text-xl font-bold mb-2 tracking-widest">2025</div>
+                    <div className="text-4xl font-extrabold tracking-wider mb-1 drop-shadow-lg">
+                      {(() => {
+                        try {
+                          const date = new Date(report.rawDate || report.date);
+                          const month = date.toLocaleDateString('en-US', { month: 'short' }).toUpperCase();
+                          const day = date.getDate().toString().padStart(2, '0');
+                          return `${month} ${day}`;
+                        } catch {
+                          return 'AUG 08';
+                        }
+                      })()}
+                    </div>
+                    <div className="text-xl font-bold mb-2 tracking-widest">
+                      {(() => {
+                        try {
+                          const date = new Date(report.rawDate || report.date);
+                          return date.getFullYear();
+                        } catch {
+                          return '2025';
+                        }
+                      })()}
+                    </div>
                     {/* 图标区 */}
                     <div className="flex gap-3 text-xl justify-center mb-1">
-                      {idx === 0 && (<><span>🧠</span><span>👥</span><span>⭐</span><span>📝</span></>)}
-                      {idx === 1 && (<><span>🤖</span><span>💡</span><span>🔥</span><span>⚡</span></>)}
-                      {idx === 2 && (<><span>🎯</span><span>📊</span><span>🚀</span><span>💼</span></>)}
+                      {report.group?.includes('业务') && (<><span>🧠</span><span>👥</span><span>⭐</span><span>📝</span></>)}
+                      {report.group?.includes('AI') && (<><span>🤖</span><span>💡</span><span>🔥</span><span>⚡</span></>)}
+                      {report.group?.includes('创业') && (<><span>🎯</span><span>📊</span><span>🚀</span><span>💼</span></>)}
+                      {!report.group?.includes('业务') && !report.group?.includes('AI') && !report.group?.includes('创业') && (<><span>📄</span><span>💬</span><span>📈</span><span>✨</span></>)}
                     </div>
                   </div>
                 </div>
@@ -237,16 +288,27 @@ export default function ReportsPage() {
                 <div className="bg-[#181926]/80 px-8 py-6">
                   <h3 className="text-white font-bold text-xl mb-4">{report.title}</h3>
                   <div className="space-y-2 mb-6">
-                    {report.summary.map((item, index) => (
+                    {Array.isArray(report.summary) ? report.summary.map((item, index) => (
                       <div key={index} className="text-gray-200 text-base">
                         - {item}
                       </div>
-                    ))}
+                    )) : (
+                      <div className="text-gray-200 text-base">
+                        {report.summary || '暂无摘要'}
+                      </div>
+                    )}
                   </div>
                   <div className="text-gray-400 text-base mb-2">{report.group}</div>
                   {/* 下载按钮 */}
                   <div className="flex justify-end">
-                    <button className="bg-[#23243a]/80 hover:bg-[#23243a]/90 text-white px-6 py-2 rounded-lg text-base transition-colors shadow">
+                    <button 
+                      onClick={(e) => {
+                        e.preventDefault();
+                        // 这里可以添加下载图片的逻辑
+                        console.log('下载日报图片:', report.id);
+                      }}
+                      className="bg-[#23243a]/80 hover:bg-[#23243a]/90 text-white px-6 py-2 rounded-lg text-base transition-colors shadow"
+                    >
                       下载
                     </button>
                   </div>
@@ -254,7 +316,8 @@ export default function ReportsPage() {
               </div>
             </Link>
           ))}
-        </div>
+          </div>
+        )}
       </div>
     </div>
   );
