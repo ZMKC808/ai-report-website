@@ -5,8 +5,12 @@ import { useState } from "react";
 
 export default function ReportDetail() {
   const params = useParams();
-  const reportId = params.id as string;
+  const reportId = (params?.id as string) || '';
   const [showShareMenu, setShowShareMenu] = useState(false);
+  
+  if (!reportId) {
+    return <div>加载中...</div>;
+  }
 
   // 模拟HTML内容
   const htmlContent = `

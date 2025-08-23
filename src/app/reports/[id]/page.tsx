@@ -9,15 +9,15 @@ export default function ReportDetailPage() {
   const router = useRouter();
   const [report, setReport] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (params.id) {
-      fetchReportContent(params.id);
+    if (params?.id) {
+      fetchReportContent(params.id as string);
     }
-  }, [params.id]);
+  }, [params?.id]);
 
-  const fetchReportContent = async (id) => {
+  const fetchReportContent = async (id: string) => {
     try {
       setLoading(true);
       setError(null);
