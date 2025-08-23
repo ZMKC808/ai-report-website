@@ -65,7 +65,6 @@ export default function ReportDetailPage() {
       const data = await response.json();
       
       if (data.success && data.image_data) {
-        // 创建下载链接
         const link = document.createElement('a');
         link.href = `data:image/png;base64,${data.image_data}`;
         link.download = `${report.title || '日报'}_${report.date}.png`;
@@ -83,157 +82,271 @@ export default function ReportDetailPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-black text-white">
-        <div className="container mx-auto px-4 py-8">
-          <div className="flex items-center justify-center min-h-[400px]">
-            <div className="text-center">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
-              <p className="text-gray-400">正在加载日报内容...</p>
+      <>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+        <div className="min-h-screen bg-gray-50">
+          {/* 页眉 */}
+          <header className="w-full bg-white mb-8 shadow-sm">
+            <div className="w-full max-w-3xl lg:max-w-[90%] mx-auto py-4 px-6">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <i className="fas fa-robot text-purple-600 text-xl"></i>
+                  <div>
+                    <h1 className="text-xl font-bold">AI社群日报平台</h1>
+                    <p className="text-sm text-gray-600">探索AI编程新式生产力工作方式</p>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <div className="text-sm text-gray-500">加载中...</div>
+                </div>
+              </div>
             </div>
-          </div>
+          </header>
+
+          {/* 主内容 */}
+          <main className="w-full max-w-3xl lg:max-w-[90%] mx-auto px-4 sm:px-6 py-8">
+            <div className="flex items-center justify-center min-h-[400px]">
+              <div className="text-center">
+                <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-purple-500 mx-auto mb-6"></div>
+                <p className="text-gray-600 text-lg">正在加载日报内容...</p>
+              </div>
+            </div>
+          </main>
         </div>
-      </div>
+      </>
     );
   }
 
   if (error) {
     return (
-      <div className="min-h-screen bg-black text-white">
-        <div className="container mx-auto px-4 py-8">
-          <div className="text-center">
-            <div className="bg-red-900/20 border border-red-500/30 rounded-lg p-8 max-w-md mx-auto">
-              <h2 className="text-xl font-bold text-red-400 mb-4">加载失败</h2>
-              <p className="text-gray-300 mb-6">{error}</p>
-              <div className="space-x-4">
-                <button
-                  onClick={() => params?.id && fetchReportContent(params.id as string)}
-                  className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg transition-colors"
-                >
-                  重试
-                </button>
-                <Link
-                  href="/reports"
-                  className="bg-gray-600 hover:bg-gray-700 px-4 py-2 rounded-lg transition-colors inline-block"
-                >
-                  返回列表
-                </Link>
+      <>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+        <div className="min-h-screen bg-gray-50">
+          {/* 页眉 */}
+          <header className="w-full bg-white mb-8 shadow-sm">
+            <div className="w-full max-w-3xl lg:max-w-[90%] mx-auto py-4 px-6">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <i className="fas fa-robot text-purple-600 text-xl"></i>
+                  <div>
+                    <h1 className="text-xl font-bold">AI社群日报平台</h1>
+                    <p className="text-sm text-gray-600">探索AI编程新式生产力工作方式</p>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <div className="text-sm text-gray-500">加载失败</div>
+                </div>
               </div>
             </div>
-          </div>
+          </header>
+
+          {/* 主内容 */}
+          <main className="w-full max-w-3xl lg:max-w-[90%] mx-auto px-4 sm:px-6 py-8">
+            <div className="flex items-center justify-center min-h-[400px]">
+              <div className="text-center max-w-md">
+                <div className="bg-red-50 border border-red-200 rounded-xl p-8">
+                  <div className="text-red-500 text-5xl mb-4">⚠️</div>
+                  <h2 className="text-xl font-bold text-red-600 mb-4">加载失败</h2>
+                  <p className="text-gray-700 mb-6">{error}</p>
+                  <div className="flex gap-4 justify-center">
+                    <button
+                      onClick={() => params?.id && fetchReportContent(params.id as string)}
+                      className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg transition-colors font-medium"
+                    >
+                      重新加载
+                    </button>
+                    <Link
+                      href="/reports"
+                      className="bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-lg transition-colors font-medium"
+                    >
+                      返回列表
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </main>
         </div>
-      </div>
+      </>
     );
   }
 
   if (!report) {
     return (
-      <div className="min-h-screen bg-black text-white">
-        <div className="container mx-auto px-4 py-8">
-          <div className="text-center">
-            <h2 className="text-xl font-bold text-gray-400 mb-4">日报不存在</h2>
-            <Link
-              href="/reports"
-              className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg transition-colors inline-block"
-            >
-              返回列表
-            </Link>
-          </div>
+      <>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+        <div className="min-h-screen bg-gray-50">
+          {/* 页眉 */}
+          <header className="w-full bg-white mb-8 shadow-sm">
+            <div className="w-full max-w-3xl lg:max-w-[90%] mx-auto py-4 px-6">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <i className="fas fa-robot text-purple-600 text-xl"></i>
+                  <div>
+                    <h1 className="text-xl font-bold">AI社群日报平台</h1>
+                    <p className="text-sm text-gray-600">探索AI编程新式生产力工作方式</p>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <div className="text-sm text-gray-500">日报不存在</div>
+                </div>
+              </div>
+            </div>
+          </header>
+
+          {/* 主内容 */}
+          <main className="w-full max-w-3xl lg:max-w-[90%] mx-auto px-4 sm:px-6 py-8">
+            <div className="flex items-center justify-center min-h-[400px]">
+              <div className="text-center">
+                <div className="text-gray-400 text-6xl mb-6">📄</div>
+                <h2 className="text-2xl font-bold text-gray-600 mb-4">日报不存在</h2>
+                <p className="text-gray-500 mb-6">请检查链接是否正确</p>
+                <Link
+                  href="/reports"
+                  className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg transition-colors font-medium inline-block"
+                >
+                  返回日报列表
+                </Link>
+              </div>
+            </div>
+          </main>
         </div>
-      </div>
+      </>
     );
   }
 
   return (
-    <div className="min-h-screen bg-black text-white">
-      {/* 导航栏 */}
-      <nav className="border-b border-gray-800">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <Link href="/" className="text-xl font-bold">
-              AI社群日报平台
-            </Link>
-            <div className="flex items-center space-x-6">
-              <Link href="/reports" className="text-gray-300 hover:text-white transition-colors">
-                社群日报
-              </Link>
-              <Link href="/tools" className="text-gray-300 hover:text-white transition-colors">
-                应用工具
-              </Link>
-              <Link href="/prompts" className="text-gray-300 hover:text-white transition-colors">
-                AI提示词
-              </Link>
+    <>
+      <script src="https://cdn.tailwindcss.com"></script>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+      <div className="min-h-screen bg-gray-50">
+        {/* 页眉 */}
+        <header className="w-full bg-white mb-8 shadow-sm">
+          <div className="w-full max-w-3xl lg:max-w-[90%] mx-auto py-4 px-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <i className="fas fa-robot text-purple-600 text-xl"></i>
+                <div>
+                  <h1 className="text-xl font-bold">{report.group_name || 'AI社群日报平台'}</h1>
+                  <p className="text-sm text-gray-600">探索AI编程新式生产力工作方式</p>
+                </div>
+              </div>
+              <div className="text-right">
+                <div className="text-lg font-semibold text-gray-800">{formatDate(report.date)}</div>
+              </div>
             </div>
           </div>
-        </div>
-      </nav>
+        </header>
 
-      {/* 主要内容 */}
-      <div className="container mx-auto px-4 py-8">
-        {/* 头部信息 */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between mb-4">
+        {/* 主内容 - 横向布局 */}
+        <main className="w-full max-w-3xl lg:max-w-[90%] mx-auto px-4 sm:px-6 py-8">
+          {/* 返回按钮和下载按钮 */}
+          <div className="flex items-center justify-between mb-8">
             <Link
               href="/reports"
-              className="flex items-center text-gray-400 hover:text-white transition-colors"
+              className="flex items-center text-purple-600 hover:text-purple-800 transition-colors bg-white px-4 py-2 rounded-lg shadow-sm border"
             >
-              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-              </svg>
+              <i className="fas fa-arrow-left mr-2"></i>
               返回日报列表
             </Link>
             
             <button
               onClick={downloadImage}
-              className="flex items-center bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg transition-colors"
+              className="flex items-center bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg transition-colors font-medium shadow-sm"
             >
-              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </svg>
+              <i className="fas fa-download mr-2"></i>
               下载图片
             </button>
           </div>
-          
-          <div className="bg-gray-900/50 rounded-lg p-6 border border-gray-800">
-            <h1 className="text-3xl font-bold mb-2">{report.title}</h1>
-            <div className="flex items-center space-x-6 text-gray-400">
-              <span className="flex items-center">
-                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-                {formatDate(report.date)}
-              </span>
-              {report.group_name && (
-                <span className="flex items-center">
-                  <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                  </svg>
-                  {report.group_name}
-                </span>
-              )}
-              {report.author && (
-                <span className="flex items-center">
-                  <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                  </svg>
-                  {report.author}
-                </span>
-              )}
+
+          {/* 日报标题卡片 */}
+          <div className="bg-white rounded-xl shadow-sm border mb-8 overflow-hidden">
+            <div className="bg-purple-600 p-6 text-white">
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between">
+                <div className="md:w-1/2 text-center md:text-left mb-4 md:mb-0">
+                  <h1 className="text-3xl md:text-4xl font-bold">{report.title}</h1>
+                  <div className="flex items-center justify-center md:justify-start mt-4 space-x-4">
+                    <div className="flex items-center bg-white/20 px-4 py-2 rounded-lg">
+                      <i className="fas fa-calendar-alt mr-2"></i>
+                      {formatDate(report.date)}
+                    </div>
+                    {report.group_name && (
+                      <div className="flex items-center bg-white/20 px-4 py-2 rounded-lg">
+                        <i className="fas fa-users mr-2"></i>
+                        {report.group_name}
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <div className="md:w-1/3 flex justify-center md:justify-end">
+                  <div className="text-center">
+                    <div className="text-4xl font-bold">
+                      {(() => {
+                        try {
+                          const date = new Date(report.date);
+                          const month = date.toLocaleDateString('en-US', { month: 'short' }).toUpperCase();
+                          const day = date.getDate();
+                          return `${month} ${day}`;
+                        } catch {
+                          return 'AUG 10';
+                        }
+                      })()}
+                    </div>
+                    <div className="text-xl font-bold">
+                      {(() => {
+                        try {
+                          const date = new Date(report.date);
+                          return date.getFullYear();
+                        } catch {
+                          return '2025';
+                        }
+                      })()}
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* HTML内容 */}
-        <div className="bg-white rounded-lg overflow-hidden shadow-lg">
-          <div 
-            className="prose prose-lg max-w-none p-8"
-            dangerouslySetInnerHTML={{ __html: report.html_content }}
-            style={{
-              color: '#333',
-              lineHeight: '1.6'
-            }}
-          />
-        </div>
+          {/* 日报内容 - 横向布局 */}
+          <div className="bg-white rounded-xl shadow-sm border overflow-hidden">
+            {/* 内容头部装饰 */}
+            <div className="bg-purple-600 h-2"></div>
+            
+            <div className="p-6 md:p-8">
+              <div 
+                className="prose prose-lg max-w-none"
+                dangerouslySetInnerHTML={{ __html: report.html_content }}
+                style={{
+                  color: '#374151',
+                  lineHeight: '1.7'
+                }}
+              />
+            </div>
+          </div>
+          
+          {/* 底部操作区域 */}
+          <div className="mt-8 text-center">
+            <div className="flex items-center justify-center space-x-4 flex-wrap gap-4">
+              <Link
+                href="/reports"
+                className="bg-gray-100 hover:bg-gray-200 text-gray-800 px-8 py-3 rounded-lg transition-colors font-medium border"
+              >
+                返回日报列表
+              </Link>
+              <button
+                onClick={downloadImage}
+                className="bg-purple-600 hover:bg-purple-700 text-white px-8 py-3 rounded-lg transition-colors font-medium shadow-lg"
+              >
+                下载分享图片
+              </button>
+            </div>
+          </div>
+        </main>
       </div>
-    </div>
+    </>
   );
 }

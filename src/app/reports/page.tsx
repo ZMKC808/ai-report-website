@@ -25,10 +25,8 @@ export default function ReportsPage() {
 
   const allGroups = [
     { id: "all", name: "全部社群", description: "" },
-    { id: "ai-coding", name: "AI编程互助会", description: "欢迎加入AI编程互助群！..." },
-    { id: "business", name: "业务脑袋群", description: "商业思维交流群" },
-    { id: "startup", name: "创业交流群", description: "创业者交流平台" },
-    { id: "finance", name: "【戴巍生财优质文...】", description: "欢迎加入戴巍老师创办的..." }
+    { id: "communication", name: "沟通", description: "沟通交流群" },
+    { id: "efficiency", name: "效率", description: "效率提升群" }
   ];
 
   const filteredGroups = allGroups.filter(group => 
@@ -47,6 +45,17 @@ export default function ReportsPage() {
   }>>([]);
   const [loading, setLoading] = useState(true);
 
+  // 根据群组名称获取渐变色
+  const getGradientForGroup = (groupName: string) => {
+    if (groupName?.includes('沟通')) {
+      return "bg-gradient-to-br from-blue-500 via-purple-500 to-purple-600";
+    } else if (groupName?.includes('效率')) {
+      return "bg-gradient-to-br from-green-400 via-blue-500 to-blue-600";
+    } else {
+      return "bg-gradient-to-br from-gray-500 via-gray-600 to-gray-700";
+    }
+  };
+
   // 从API获取日报列表
   useEffect(() => {
     fetchReports();
@@ -58,8 +67,19 @@ export default function ReportsPage() {
       const response = await fetch('/api/reports/list');
       if (response.ok) {
         const data = await response.json();
+        console.log('API返回数据:', data); // 调试日志
         if (data.success) {
-          setReports(data.reports || []);
+          // 转换API数据格式为前端期望的格式
+          const formattedReports = (data.data || []).map(report => ({
+            id: report.id,
+            date: report.date,
+            title: report.title,
+            summary: typeof report.summary === 'string' ? report.summary.split('\n').filter(s => s.trim()).slice(0, 3) : report.summary.slice(0, 3),
+            group: report.group_name,
+            gradient: getGradientForGroup(report.group_name),
+            rawDate: report.date
+          }));
+          setReports(formattedReports);
         }
       }
     } catch (error) {
@@ -70,16 +90,16 @@ export default function ReportsPage() {
           id: 1,
           date: "2025年8月22日",
           title: "今日讨论重点",
-          summary: ["深入观察度交流", "李想创业智慧解读", "房产投资观察"],
-          group: "业务脑袋群",
+          summary: ["AI编程项目管理实践", "内容创作变现策略", "新兴开发工具对比"],
+          group: "沟通",
           gradient: "bg-gradient-to-br from-blue-500 via-purple-500 to-purple-600"
         },
         {
           id: 2,
           date: "2025年8月21日", 
           title: "今日讨论重点",
-          summary: ["AI Agent开发实战", "Kimi API集成技巧", "自动化部署方案"],
-          group: "AI编程互助会",
+          summary: ["时间管理技巧分享", "效率工具推荐", "团队协作最佳实践"],
+          group: "效率",
           gradient: "bg-gradient-to-br from-green-400 via-blue-500 to-blue-600"
         }
       ]);
@@ -238,7 +258,7 @@ export default function ReportsPage() {
         </div>
       </div>
 
-      {/* 日报卡片 - 高级渐变风格 */}
+      {/* 日报卡片 - 一行三个，降低高度 */}
       <div className="max-w-6xl mx-auto px-6 pb-16">
         {loading ? (
           <div className="flex items-center justify-center py-20">
@@ -253,77 +273,76 @@ export default function ReportsPage() {
             <p className="text-gray-500 text-sm mt-2">请先上传一些日报内容</p>
           </div>
         ) : (
-          <div className="grid grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {reports.map((report, idx) => (
               <Link key={report.id} href={`/reports/${report.id}`}>
-              <div className="cursor-pointer group rounded-2xl overflow-hidden shadow-xl bg-[#181926]/80 border border-[#23243a] transition-all hover:scale-[1.025]">
-                {/* 卡片头部 - 高级渐变色 */}
-                <div className={`${report.gradient || 'bg-gradient-to-br from-blue-500 via-purple-500 to-purple-600'} p-6 pb-3`}> 
-                  <div className="flex flex-col items-center justify-center">
-                    <span className="text-white text-sm opacity-90 mb-1">{report.date}</span>
-                    <div className="text-4xl font-extrabold tracking-wider mb-1 drop-shadow-lg">
-                      {(() => {
-                        try {
-                          const date = new Date(report.rawDate || report.date);
-                          const month = date.toLocaleDateString('en-US', { month: 'short' }).toUpperCase();
-                          const day = date.getDate().toString().padStart(2, '0');
-                          return `${month} ${day}`;
-                        } catch {
-                          return 'AUG 08';
-                        }
-                      })()}
+                <div className="cursor-pointer group rounded-xl overflow-hidden shadow-lg bg-[#181926]/80 border border-[#23243a] transition-all hover:scale-[1.02]">
+                  {/* 卡片头部 - 渐变色 */}
+                  <div className={`${report.gradient || 'bg-gradient-to-br from-blue-500 via-purple-500 to-purple-600'} p-4`}> 
+                    <div className="flex justify-between items-center">
+                      <span className="text-white text-sm opacity-90">{report.date}</span>
+                      <div className="flex gap-2 text-lg">
+                        {report.group?.includes('沟通') && (<><span>📄</span><span>💬</span><span>📈</span><span>✨</span></>)}
+                        {report.group?.includes('效率') && (<><span>⏱️</span><span>📊</span><span>🚀</span><span>💼</span></>)}
+                        {!report.group?.includes('沟通') && !report.group?.includes('效率') && (<><span>📄</span><span>💬</span><span>📈</span><span>✨</span></>)}
+                      </div>
                     </div>
-                    <div className="text-xl font-bold mb-2 tracking-widest">
-                      {(() => {
-                        try {
-                          const date = new Date(report.rawDate || report.date);
-                          return date.getFullYear();
-                        } catch {
-                          return '2025';
-                        }
-                      })()}
+                    <div className="text-center mt-2">
+                      <div className="text-3xl font-bold tracking-wider text-white drop-shadow-lg">
+                        {(() => {
+                          try {
+                            const date = new Date(report.rawDate || report.date);
+                            const month = date.toLocaleDateString('en-US', { month: 'short' }).toUpperCase();
+                            const day = date.getDate().toString().padStart(2, '0');
+                            return `${month} ${day}`;
+                          } catch {
+                            return 'AUG 10';
+                          }
+                        })()}
+                      </div>
+                      <div className="text-lg font-bold tracking-widest text-white/90">
+                        {(() => {
+                          try {
+                            const date = new Date(report.rawDate || report.date);
+                            return date.getFullYear();
+                          } catch {
+                            return '2025';
+                          }
+                        })()}
+                      </div>
                     </div>
-                    {/* 图标区 */}
-                    <div className="flex gap-3 text-xl justify-center mb-1">
-                      {report.group?.includes('业务') && (<><span>🧠</span><span>👥</span><span>⭐</span><span>📝</span></>)}
-                      {report.group?.includes('AI') && (<><span>🤖</span><span>💡</span><span>🔥</span><span>⚡</span></>)}
-                      {report.group?.includes('创业') && (<><span>🎯</span><span>📊</span><span>🚀</span><span>💼</span></>)}
-                      {!report.group?.includes('业务') && !report.group?.includes('AI') && !report.group?.includes('创业') && (<><span>📄</span><span>💬</span><span>📈</span><span>✨</span></>)}
+                  </div>
+                  {/* 卡片内容 - 只显示三行概况 */}
+                  <div className="bg-[#181926]/80 p-4">
+                    <h3 className="text-white font-bold text-lg mb-3">{report.title}</h3>
+                    <div className="space-y-1 mb-3">
+                      {Array.isArray(report.summary) ? report.summary.slice(0, 3).map((item: string, index: number) => (
+                        <div key={index} className="text-gray-300 text-sm">
+                          - {item}
+                        </div>
+                      )) : (
+                        <div className="text-gray-300 text-sm">
+                          {report.summary || '暂无摘要'}
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <div className="text-gray-400 text-sm">{report.group}</div>
+                      <button 
+                        onClick={(e) => {
+                          e.preventDefault();
+                          // 这里可以添加下载图片的逻辑
+                          console.log('下载日报图片:', report.id);
+                        }}
+                        className="bg-[#23243a]/80 hover:bg-[#23243a] text-white px-3 py-1 rounded-lg text-sm transition-colors"
+                      >
+                        下载
+                      </button>
                     </div>
                   </div>
                 </div>
-                {/* 卡片底部 - 半透明黑色内容区域 */}
-                <div className="bg-[#181926]/80 px-8 py-6">
-                  <h3 className="text-white font-bold text-xl mb-4">{report.title}</h3>
-                  <div className="space-y-2 mb-6">
-                    {Array.isArray(report.summary) ? report.summary.map((item: string, index: number) => (
-                      <div key={index} className="text-gray-200 text-base">
-                        - {item}
-                      </div>
-                    )) : (
-                      <div className="text-gray-200 text-base">
-                        {report.summary || '暂无摘要'}
-                      </div>
-                    )}
-                  </div>
-                  <div className="text-gray-400 text-base mb-2">{report.group}</div>
-                  {/* 下载按钮 */}
-                  <div className="flex justify-end">
-                    <button 
-                      onClick={(e) => {
-                        e.preventDefault();
-                        // 这里可以添加下载图片的逻辑
-                        console.log('下载日报图片:', report.id);
-                      }}
-                      className="bg-[#23243a]/80 hover:bg-[#23243a]/90 text-white px-6 py-2 rounded-lg text-base transition-colors shadow"
-                    >
-                      下载
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </Link>
-          ))}
+              </Link>
+            ))}
           </div>
         )}
       </div>
