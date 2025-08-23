@@ -186,7 +186,7 @@ export default function PromptsPage() {
                   {/* 预览内容 */}
                   <div className="bg-gray-800 rounded-lg p-4 mb-4">
                     <p className="text-gray-300 text-sm italic">
-                      "{prompt.preview}..."
+                      &quot;{prompt.preview}...&quot;
                     </p>
                   </div>
                   
