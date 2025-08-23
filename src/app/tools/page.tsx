@@ -13,7 +13,7 @@ export default function ToolsPage() {
       category: "数据分析",
       tags: ["微信", "数据分析", "报告生成"],
       status: "运行中",
-      bgColor: "from-blue-500 to-blue-600"
+      gradient: "bg-gradient-to-br from-[#23243a]/80 to-[#23243a]/60"
     },
     {
       id: 2,
@@ -22,7 +22,7 @@ export default function ToolsPage() {
       category: "AI工具",
       tags: ["AI", "文本处理", "自动总结"],
       status: "运行中",
-      bgColor: "from-green-500 to-green-600"
+      gradient: "bg-gradient-to-br from-[#23243a]/80 to-[#23243a]/60"
     },
     {
       id: 3,
@@ -31,7 +31,7 @@ export default function ToolsPage() {
       category: "文档工具",
       tags: ["模板", "报告", "自动化"],
       status: "运行中",
-      bgColor: "from-purple-500 to-purple-600"
+      gradient: "bg-gradient-to-br from-[#23243a]/80 to-[#23243a]/60"
     },
     {
       id: 4,
@@ -40,7 +40,7 @@ export default function ToolsPage() {
       category: "可视化",
       tags: ["图表", "可视化", "数据"],
       status: "开发中",
-      bgColor: "from-orange-500 to-orange-600"
+      gradient: "bg-gradient-to-br from-[#23243a]/80 to-[#23243a]/60"
     },
     {
       id: 5,
@@ -49,7 +49,7 @@ export default function ToolsPage() {
       category: "DevOps",
       tags: ["部署", "自动化", "CI/CD"],
       status: "测试中",
-      bgColor: "from-red-500 to-red-600"
+      gradient: "bg-gradient-to-br from-[#23243a]/80 to-[#23243a]/60"
     },
     {
       id: 6,
@@ -58,7 +58,7 @@ export default function ToolsPage() {
       category: "开发工具",
       tags: ["API", "管理", "测试"],
       status: "运行中",
-      bgColor: "from-teal-500 to-teal-600"
+      gradient: "bg-gradient-to-br from-[#23243a]/80 to-[#23243a]/60"
     }
   ];
 
@@ -114,59 +114,43 @@ export default function ToolsPage() {
         </div>
       </div>
 
-      {/* 工具卡片网格 */}
+      {/* 工具卡片网格 - 简洁低饱和度风格 */}
       <div className="max-w-6xl mx-auto px-6 pb-16">
         <div className="grid grid-cols-3 gap-8">
           {filteredTools.map((tool) => (
             <Link key={tool.id} href={`/tool/${tool.id}`}>
-              <div className="cursor-pointer group">
-                {/* 卡片头部 - 彩色渐变区域 */}
-                <div className={`bg-gradient-to-r ${tool.bgColor} p-6 rounded-t-2xl`}>
-                  <div className="flex justify-between items-start mb-4">
+              <div className="cursor-pointer group rounded-2xl overflow-hidden shadow-xl border border-[#23243a] bg-[#181926]/70 transition-all hover:scale-[1.025]">
+                {/* 卡片头部 - 低调渐变色 */}
+                <div className={`${tool.gradient} p-7 pb-4`}> 
+                  <div className="flex justify-between items-start mb-2">
                     <span className={`text-xs px-2 py-1 rounded-full ${
-                      tool.status === "运行中" ? "bg-green-500" :
-                      tool.status === "开发中" ? "bg-yellow-500" :
-                      "bg-blue-500"
-                    } text-white`}>
-                      {tool.status}
-                    </span>
-                    <div className="flex gap-2 text-white opacity-90">
-                      <div className="w-6 h-6 flex items-center justify-center"></div>
-                      <div className="w-6 h-6 flex items-center justify-center"></div>
-                    </div>
+                      tool.status === "运行中" ? "bg-green-500/80" :
+                      tool.status === "开发中" ? "bg-yellow-500/80" :
+                      "bg-blue-500/80"
+                    } text-white`}>{tool.status}</span>
                   </div>
-                  
                   <div className="text-white">
-                    <div className="text-xl font-bold mb-2">
-                      {tool.name}
-                    </div>
-                    <div className="text-sm opacity-90">
-                      {tool.category}
-                    </div>
+                    <div className="text-xl font-bold mb-1">{tool.name}</div>
+                    <div className="text-sm opacity-80">{tool.category}</div>
                   </div>
                 </div>
-
-                {/* 卡片底部 - 黑色内容区域 */}
-                <div className="bg-gray-900 border border-gray-800 border-t-0 rounded-b-2xl p-6 group-hover:bg-gray-800 transition-colors">
-                  <p className="text-gray-300 text-sm mb-4 leading-relaxed">
-                    {tool.description}
-                  </p>
-                  
+                {/* 卡片底部 - 半透明深色内容区域 */}
+                <div className="bg-[#181926]/80 border-t border-[#23243a] rounded-b-2xl px-7 py-6 group-hover:bg-[#23243a]/80 transition-colors">
+                  <p className="text-gray-200 text-sm mb-4 leading-relaxed">{tool.description}</p>
                   {/* 标签 */}
                   <div className="flex flex-wrap gap-2 mb-6">
                     {tool.tags.map((tag, index) => (
-                      <span key={index} className="bg-gray-800 text-gray-300 text-xs px-2 py-1 rounded">
+                      <span key={index} className="bg-[#23243a]/80 text-gray-300 text-xs px-2 py-1 rounded">
                         {tag}
                       </span>
                     ))}
                   </div>
-                  
                   {/* 操作按钮 */}
                   <div className="flex gap-2">
-                    <button className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg text-sm transition-colors">
+                    <button className="flex-1 bg-[#23243a]/80 hover:bg-[#23243a]/90 text-white py-2 rounded-lg text-sm transition-colors shadow">
                       使用工具
                     </button>
-                    <button className="px-3 bg-gray-800 hover:bg-gray-700 text-gray-300 py-2 rounded-lg text-sm transition-colors">
+                    <button className="px-3 bg-[#23243a]/60 hover:bg-[#23243a]/80 text-gray-300 py-2 rounded-lg text-sm transition-colors">
                       详情
                     </button>
                   </div>
