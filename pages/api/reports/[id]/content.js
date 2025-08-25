@@ -1,5 +1,21 @@
 // 获取日报详情内容API
 // 返回指定ID的日报HTML内容
+import fs from 'fs';
+import path from 'path';
+
+// 从文件系统读取报告数据
+function loadReportsFromFile() {
+  try {
+    const reportsFilePath = path.join(process.cwd(), 'data', 'reports.json');
+    if (fs.existsSync(reportsFilePath)) {
+      const data = fs.readFileSync(reportsFilePath, 'utf8');
+      return JSON.parse(data);
+    }
+  } catch (error) {
+    console.error('读取报告文件失败:', error);
+  }
+  return [];
+}
 
 // 使用全局变量获取数据
 let reports;
@@ -19,8 +35,22 @@ export default async function handler(req, res) {
   }
 
   try {
-    // 从内存存储中获取日报
-    const report = reports.get(id);
+    // 尝试从内存存储中获取日报
+    let report = reports.get(id);
+    
+    // 如果内存中没有，尝试从文件系统加载
+    if (!report) {
+      console.log(`📂 内存中未找到ID为 ${id} 的日报，尝试从文件系统加载...`);
+      const reportsData = loadReportsFromFile();
+      
+      // 更新全局存储
+      reportsData.forEach(r => {
+        global.reports.set(r.id.toString(), r);
+      });
+      
+      // 再次尝试获取
+      report = global.reports.get(id);
+    }
     
     if (!report) {
       return res.status(404).json({
