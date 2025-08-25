@@ -1,5 +1,21 @@
 // 获取日报列表API
 // 返回所有已上传的日报
+import fs from 'fs';
+import path from 'path';
+
+// 从文件系统读取报告数据
+function loadReportsFromFile() {
+  try {
+    const reportsFilePath = path.join(process.cwd(), 'data', 'reports.json');
+    if (fs.existsSync(reportsFilePath)) {
+      const data = fs.readFileSync(reportsFilePath, 'utf8');
+      return JSON.parse(data);
+    }
+  } catch (error) {
+    console.error('读取报告文件失败:', error);
+  }
+  return [];
+}
 
 export default async function handler(req, res) {
   if (req.method !== 'GET') {
@@ -10,10 +26,18 @@ export default async function handler(req, res) {
   }
 
   try {
-    // 确保全局存储存在
+    // 从文件系统中读取报告数据
+    const reportsData = loadReportsFromFile();
+    
+    // 确保全局存储存在并更新
     if (!global.reports) {
       global.reports = new Map();
     }
+    
+    // 将文件系统中的数据同步到内存中
+    reportsData.forEach(report => {
+      global.reports.set(report.id.toString(), report);
+    });
     
     // 从全局存储中获取所有日报
     const reportList = Array.from(global.reports.values())

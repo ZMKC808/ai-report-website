@@ -3,6 +3,7 @@
 
 import formidable from 'formidable';
 import fs from 'fs';
+import path from 'path';
 
 export const config = {
   api: {
@@ -15,6 +16,38 @@ if (!global.reports) {
   global.reports = new Map();
 }
 const reports = global.reports;
+
+// 从文件系统读取报告数据
+function loadReportsFromFile() {
+  try {
+    const reportsFilePath = path.join(process.cwd(), 'data', 'reports.json');
+    if (fs.existsSync(reportsFilePath)) {
+      const data = fs.readFileSync(reportsFilePath, 'utf8');
+      return JSON.parse(data);
+    }
+  } catch (error) {
+    console.error('读取报告文件失败:', error);
+  }
+  return [];
+}
+
+// 保存报告到文件系统
+function saveReportsToFile(reportsArray) {
+  try {
+    const reportsFilePath = path.join(process.cwd(), 'data', 'reports.json');
+    const dataDir = path.dirname(reportsFilePath);
+    
+    // 确保data目录存在
+    if (!fs.existsSync(dataDir)) {
+      fs.mkdirSync(dataDir, { recursive: true });
+    }
+    
+    fs.writeFileSync(reportsFilePath, JSON.stringify(reportsArray, null, 2), 'utf8');
+    console.log('✅ 报告数据已保存到文件系统');
+  } catch (error) {
+    console.error('❌ 保存报告到文件系统失败:', error);
+  }
+}
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -73,7 +106,22 @@ export default async function handler(req, res) {
       image_api_url: `/api/reports/${reportId}/share-image`
     };
     
+    // 从文件系统加载现有报告
+    const existingReports = loadReportsFromFile();
+    
+    // 将现有报告同步到内存中
+    existingReports.forEach(report => {
+      if (!reports.has(report.id.toString())) {
+        reports.set(report.id.toString(), report);
+      }
+    });
+    
+    // 保存到内存
     reports.set(reportId, reportData);
+    
+    // 保存到文件系统
+    const updatedReportsArray = Array.from(reports.values());
+    saveReportsToFile(updatedReportsArray);
     
     console.log('✅ 业务脑袋日报上传成功:', {
       id: reportId,
